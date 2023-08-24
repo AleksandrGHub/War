@@ -15,7 +15,21 @@ namespace War
 
     class Battlefield
     {
+        private Country _firstCountry = new Country("Netherlands");
+        private Country _secondCountry = new Country("Sweden");
 
+    }
+
+    class Country
+    {
+        private List<Soldier> _platoon = new List<Soldier>();
+
+        public Country(string name)
+        {
+            Name = name;
+        }
+
+        public string Name { get; private set; }
     }
 
     class Soldier
