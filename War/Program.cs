@@ -32,8 +32,18 @@ namespace War
         {
             while (_firstCountry.GetCountCells() > 0 & _secondCountry.GetCountCells() > 0)
             {
-                _firstCountry.GetSoldier().TakeDamage(_secondCountry.GetSoldier().Damage);
+                Soldier firstSoldier = _firstCountry.GetSoldier();
+                Soldier secondSoldier = _secondCountry.GetSoldier();
+                firstSoldier.TakeDamage(secondSoldier.Damage);
+                if (firstSoldier.Health <= 0)
+                {
+                    _firstCountry.DeleteSoldier(firstSoldier);
+                }
 
+                if (secondSoldier.Health <= 0)
+                {
+
+                }
             }
 
             if (_firstCountry.GetCountCells() == 0)
@@ -74,6 +84,11 @@ namespace War
         {
             return _platoon.GetSoldier();
         }
+
+        public void DeleteSoldier(Soldier soldier)
+        {
+            _platoon.DeleteSoldier(soldier);
+        }
     }
 
     class Platoon
@@ -93,9 +108,9 @@ namespace War
             }
         }
 
-        public void DeleteSoldier(int number)
+        public void DeleteSoldier(Soldier soldier)
         {
-            _soldiers.RemoveAt(number);
+            _soldiers.Remove(soldier);
         }
 
         public Soldier GetSoldier()
