@@ -40,9 +40,16 @@ namespace War
                     _firstCountry.DeleteSoldier(firstSoldier);
                 }
 
-                if (secondSoldier.Health <= 0)
+                if (firstSoldier == null)
                 {
-
+                }
+                else
+                {
+                    secondSoldier.TakeDamage(firstSoldier.Damage);
+                    if (secondSoldier.Health <= 0)
+                    {
+                        _secondCountry.DeleteSoldier(secondSoldier);
+                    }
                 }
             }
 
@@ -93,7 +100,7 @@ namespace War
 
     class Platoon
     {
-        private int _numberSoldiers = 2;
+        private int _numberSoldiers = 10;
         private int _health = 100;
         private int _armor = 100;
         private int _damage = 10;
@@ -161,7 +168,7 @@ namespace War
 
         public void TakeDamage(int damage)
         {
-            Damage -= damage;
+            Health -= damage;
         }
     }
 
