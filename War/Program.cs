@@ -20,7 +20,6 @@ namespace War
     {
         private Country _firstCountry = new Country("Netherlands");
         private Country _secondCountry = new Country("Sweden");
-        private Random _random = new Random();
 
         public void AddSoldiers()
         {
@@ -30,10 +29,13 @@ namespace War
 
         public void Fight()
         {
+            Soldier firstSoldier;
+            Soldier secondSoldier;
+
             while (_firstCountry.GetCountCells() > 0 & _secondCountry.GetCountCells() > 0)
             {
-                Soldier firstSoldier = _firstCountry.GetSoldier();
-                Soldier secondSoldier = _secondCountry.GetSoldier();
+                firstSoldier = _firstCountry.GetSoldier();
+                secondSoldier = _secondCountry.GetSoldier();
                 firstSoldier.TakeDamage(secondSoldier.Damage);
                 if (firstSoldier.Health <= 0)
                 {
@@ -51,6 +53,11 @@ namespace War
                         _secondCountry.DeleteSoldier(secondSoldier);
                     }
                 }
+
+                Console.Clear();
+                _firstCountry.ShowInfo();
+                _secondCountry.ShowInfo();
+                Console.ReadKey();
             }
 
             if (_firstCountry.GetCountCells() == 0)
@@ -96,14 +103,21 @@ namespace War
         {
             _platoon.DeleteSoldier(soldier);
         }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine("Страна " + Name);
+            _platoon.ShowInfo();
+            Console.WriteLine();
+        }
     }
 
     class Platoon
     {
         private int _numberSoldiers = 10;
-        private int _health = 100;
+        private int _health = 10;
         private int _armor = 100;
-        private int _damage = 10;
+        private int _damage = 1;
         private Random _random = new Random();
         private List<Soldier> _soldiers = new List<Soldier>();
 
@@ -115,6 +129,20 @@ namespace War
             }
         }
 
+        public void ShowInfo()
+        {
+            for (int i = 0; i < _soldiers.Count; i++)
+            {
+                Console.Write("Солдат " + i + _soldiers[i].GetType() + "   ");
+                for (int j = 0; j < _soldiers[i].Health; j++)
+                {
+                    Console.Write("x");
+                }
+
+                Console.WriteLine();
+            }
+        }
+
         public void DeleteSoldier(Soldier soldier)
         {
             _soldiers.Remove(soldier);
@@ -122,7 +150,8 @@ namespace War
 
         public Soldier GetSoldier()
         {
-            return _soldiers[_random.Next(_soldiers.Count)];
+            int index = _random.Next(_soldiers.Count);
+            return _soldiers[index];
         }
 
         private Soldier ChooseSoldier()
