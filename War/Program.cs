@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace War
 {
@@ -18,8 +15,8 @@ namespace War
 
     class Battlefield
     {
-        private Country _firstCountry = new Country("Netherlands");
-        private Country _secondCountry = new Country("Sweden");
+        private Country _firstCountry = new Country("Netherlands", 7);
+        private Country _secondCountry = new Country("Sweden", 5);
 
         public void AddSoldiers()
         {
@@ -37,14 +34,14 @@ namespace War
                 firstSoldier = _firstCountry.GetSoldier();
                 secondSoldier = _secondCountry.GetSoldier();
                 firstSoldier.TakeDamage(secondSoldier.Damage);
+
                 if (firstSoldier.Health <= 0)
                 {
                     _firstCountry.DeleteSoldier(firstSoldier);
                 }
 
-                if (firstSoldier == null)
-                {
-                }
+                if (firstSoldier == null) { }
+
                 else
                 {
                     secondSoldier.TakeDamage(firstSoldier.Damage);
@@ -66,7 +63,8 @@ namespace War
             }
 
             else
-                if (_secondCountry.GetCountCells() == 0)
+
+            if (_secondCountry.GetCountCells() == 0)
             {
                 Console.WriteLine("Страна " + _firstCountry.Name + " победила!");
             }
@@ -75,10 +73,11 @@ namespace War
 
     class Country
     {
-        private Platoon _platoon = new Platoon();
+        private Platoon _platoon;
 
-        public Country(string name)
+        public Country(string name, int number)
         {
+            _platoon = new Platoon(number);
             Name = name;
         }
 
@@ -114,12 +113,17 @@ namespace War
 
     class Platoon
     {
+        private float _health = 100;
         private int _numberSoldiers = 10;
-        private int _health = 10;
         private int _armor = 100;
-        private int _damage = 1;
-        private Random _random = new Random();
+        private int _damage = 10;
+        private Random _random;
         private List<Soldier> _soldiers = new List<Soldier>();
+
+        public Platoon(int number)
+        {
+            _random = new Random(number);
+        }
 
         public void AddSolders()
         {
@@ -133,11 +137,11 @@ namespace War
         {
             for (int i = 0; i < _soldiers.Count; i++)
             {
-                Console.Write("Солдат " + i + _soldiers[i].GetType() + "   ");
-                for (int j = 0; j < _soldiers[i].Health; j++)
-                {
-                    Console.Write("x");
-                }
+                Console.Write("Солдат " + i + "   " + _soldiers[i].Health + " HP");
+                //for (int j = 0; j < _soldiers[i].Health; j++)
+                //{
+                //    Console.Write("x");
+                //}
 
                 Console.WriteLine();
             }
@@ -184,37 +188,46 @@ namespace War
 
     class Soldier
     {
-        public Soldier(int health, int armor, int damage)
+        public Soldier(float health, int armor, int damage)
         {
             Health = health;
             Armor = armor;
             Damage = damage;
         }
 
-        public int Health { get; private set; }
+        public float Health { get; private set; }
         public int Armor { get; private set; }
         public int Damage { get; private set; }
 
         public void TakeDamage(int damage)
         {
-            Health -= damage;
+            Health -= damage * (Armor - (Armor - 100) * 2) / 100;
         }
     }
 
     class StrongSoldier : Soldier
     {
-        public StrongSoldier(int health, int armor, int damage) : base(health, armor, damage) { }
-
-
+        public StrongSoldier(float health, int armor, int damage) : base(health, armor, damage)
+        {
+            damage += 5;
+        }
     }
 
     class AgileSoldier : Soldier
     {
-        public AgileSoldier(int health, int armor, int damage) : base(health, armor, damage) { }
+        public AgileSoldier(float health, int armor, int damage) : base(health, armor, damage)
+        {
+            health += 15;
+            damage += 2;
+        }
     }
 
     class HardySoldier : Soldier
     {
-        public HardySoldier(int health, int armor, int damage) : base(health, armor, damage) { }
+        public HardySoldier(float health, int armor, int damage) : base(health, armor, damage)
+        {
+            health += 15;
+            armor += 15;
+        }
     }
 }
