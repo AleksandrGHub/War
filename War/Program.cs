@@ -113,10 +113,10 @@ namespace War
 
     class Platoon
     {
-        private float _health = 100;
+        private float _health;
+        private int _armor;
+        private int _damage;
         private int _numberSoldiers = 10;
-        private int _armor = 100;
-        private int _damage = 10;
         private Random _random;
         private List<Soldier> _soldiers = new List<Soldier>();
 
@@ -137,7 +137,7 @@ namespace War
         {
             for (int i = 0; i < _soldiers.Count; i++)
             {
-                Console.Write("Солдат " + i + "   " + _soldiers[i].Health + " HP");
+                Console.Write("Солдат " + i + "   " + _soldiers[i].Health + " HP / Armor " + _soldiers[i].Armor + " / Damage " + _soldiers[i].Damage);
                 //for (int j = 0; j < _soldiers[i].Health; j++)
                 //{
                 //    Console.Write("x");
@@ -209,7 +209,9 @@ namespace War
     {
         public StrongSoldier(float health, int armor, int damage) : base(health, armor, damage)
         {
-            damage += 5;
+            health = 100;
+            armor = 100;
+            damage = 15;
         }
     }
 
@@ -217,8 +219,9 @@ namespace War
     {
         public AgileSoldier(float health, int armor, int damage) : base(health, armor, damage)
         {
-            health += 15;
-            damage += 2;
+            health = 115;
+            armor = 100;
+            damage = 12;
         }
     }
 
@@ -226,8 +229,9 @@ namespace War
     {
         public HardySoldier(float health, int armor, int damage) : base(health, armor, damage)
         {
-            health += 15;
-            armor += 15;
+            health = 115;
+            armor = 115;
+            damage = 10;
         }
     }
 }
