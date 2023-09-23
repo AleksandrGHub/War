@@ -113,9 +113,6 @@ namespace War
 
     class Platoon
     {
-        private float _health;
-        private int _armor;
-        private int _damage;
         private int _numberSoldiers = 10;
         private Random _random;
         private List<Soldier> _soldiers = new List<Soldier>();
@@ -137,13 +134,7 @@ namespace War
         {
             for (int i = 0; i < _soldiers.Count; i++)
             {
-                Console.Write("Солдат " + i + "   " + _soldiers[i].Health + " HP / Armor " + _soldiers[i].Armor + " / Damage " + _soldiers[i].Damage);
-                //for (int j = 0; j < _soldiers[i].Health; j++)
-                //{
-                //    Console.Write("x");
-                //}
-
-                Console.WriteLine();
+                _soldiers[i].ShowInfo();
             }
         }
 
@@ -167,13 +158,13 @@ namespace War
             switch (randomNumber)
             {
                 case 0:
-                    soldier = new StrongSoldier(_health, _armor, _damage);
+                    soldier = new StrongSoldier();
                     break;
                 case 1:
-                    soldier = new AgileSoldier(_health, _armor, _damage);
+                    soldier = new AgileSoldier();
                     break;
                 case 2:
-                    soldier = new HardySoldier(_health, _armor, _damage);
+                    soldier = new HardySoldier();
                     break;
             }
 
@@ -188,50 +179,79 @@ namespace War
 
     class Soldier
     {
-        public Soldier(float health, int armor, int damage)
+        public Soldier()
         {
-            Health = health;
-            Armor = armor;
-            Damage = damage;
+            Health = 100;
+            Armor = 100;
+            Damage = 10;
         }
 
-        public float Health { get; private set; }
-        public int Armor { get; private set; }
-        public int Damage { get; private set; }
+        public float Health { get; protected set; }
+        public int Armor { get; protected set; }
+        public int Damage { get; protected set; }
 
-        public void TakeDamage(int damage)
+        public virtual void TakeDamage(int damage)
         {
             Health -= damage * (Armor - (Armor - 100) * 2) / 100;
+        }
+
+        public virtual void ShowInfo()
+        {
+            Console.WriteLine($"Здоровье  {Health} / Броня  {Armor} / Урон  {Damage}");
         }
     }
 
     class StrongSoldier : Soldier
     {
-        public StrongSoldier(float health, int armor, int damage) : base(health, armor, damage)
+        public StrongSoldier() : base()
         {
-            health = 100;
-            armor = 100;
-            damage = 15;
+            Damage += 5;
+        }
+
+        public override void TakeDamage(int damage)
+        {
+            base.TakeDamage(damage);
+        }
+
+        public override void ShowInfo()
+        {
+            base.ShowInfo();
         }
     }
-
     class AgileSoldier : Soldier
     {
-        public AgileSoldier(float health, int armor, int damage) : base(health, armor, damage)
+        public AgileSoldier() : base()
         {
-            health = 115;
-            armor = 100;
-            damage = 12;
+            Health += 15;
+            Damage += 2;
+        }
+        public override void TakeDamage(int damage)
+        {
+            base.TakeDamage(damage);
+        }
+
+        public override void ShowInfo()
+        {
+            base.ShowInfo();
         }
     }
 
     class HardySoldier : Soldier
     {
-        public HardySoldier(float health, int armor, int damage) : base(health, armor, damage)
+        public HardySoldier() : base()
         {
-            health = 115;
-            armor = 115;
-            damage = 10;
+            Health += 15;
+            Armor += 15;
+        }
+
+        public override void TakeDamage(int damage)
+        {
+            base.TakeDamage(damage);
+        }
+
+        public override void ShowInfo()
+        {
+            base.ShowInfo();
         }
     }
 }
