@@ -33,6 +33,10 @@ namespace War
             {
                 firstSoldier = _firstCountry.GetSoldier();
                 secondSoldier = _secondCountry.GetSoldier();
+                Console.Clear();
+                Console.WriteLine("Нажмите любую кнопу для следующего хода.");
+                _firstCountry.ShowInfo();
+                _secondCountry.ShowInfo();
                 firstSoldier.TakeDamage(secondSoldier.Damage);
 
                 if (firstSoldier.Health <= 0)
@@ -45,20 +49,21 @@ namespace War
                 else
                 {
                     secondSoldier.TakeDamage(firstSoldier.Damage);
+
                     if (secondSoldier.Health <= 0)
                     {
                         _secondCountry.DeleteSoldier(secondSoldier);
                     }
                 }
 
-                Console.Clear();
-                _firstCountry.ShowInfo();
-                _secondCountry.ShowInfo();
                 Console.ReadKey();
             }
 
             if (_firstCountry.GetCountCells() == 0)
             {
+                Console.Clear();
+                _firstCountry.ShowInfo();
+                _secondCountry.ShowInfo();
                 Console.WriteLine("Страна " + _secondCountry.Name + " победила!");
             }
 
@@ -66,6 +71,9 @@ namespace War
 
             if (_secondCountry.GetCountCells() == 0)
             {
+                Console.Clear();
+                _firstCountry.ShowInfo();
+                _secondCountry.ShowInfo();
                 Console.WriteLine("Страна " + _firstCountry.Name + " победила!");
             }
         }
@@ -105,7 +113,7 @@ namespace War
 
         public void ShowInfo()
         {
-            Console.WriteLine("Страна " + Name);
+            Console.WriteLine("Страна " + Name + ". Осталось " + GetCountCells() + " воинов.");
             _platoon.ShowInfo();
             Console.WriteLine();
         }
@@ -113,7 +121,7 @@ namespace War
 
     class Platoon
     {
-        private int _numberSoldiers = 10;
+        private int _numberSoldiers = 5;
         private Random _random;
         private List<Soldier> _soldiers = new List<Soldier>();
 
@@ -149,6 +157,11 @@ namespace War
             return _soldiers[index];
         }
 
+        public int GetCountCells()
+        {
+            return _soldiers.Count;
+        }
+
         private Soldier ChooseSoldier()
         {
             int numberOptions = 3;
@@ -170,11 +183,6 @@ namespace War
 
             return soldier;
         }
-
-        public int GetCountCells()
-        {
-            return _soldiers.Count;
-        }
     }
 
     class Soldier
@@ -187,10 +195,10 @@ namespace War
         }
 
         public float Health { get; protected set; }
-        public int Armor { get; protected set; }
-        public int Damage { get; protected set; }
+        public float Armor { get; protected set; }
+        public float Damage { get; protected set; }
 
-        public virtual void TakeDamage(int damage)
+        public virtual void TakeDamage(float damage)
         {
             Health -= damage * (Armor - (Armor - 100) * 2) / 100;
         }
@@ -208,7 +216,7 @@ namespace War
             Damage += 5;
         }
 
-        public override void TakeDamage(int damage)
+        public override void TakeDamage(float damage)
         {
             base.TakeDamage(damage);
         }
@@ -225,7 +233,7 @@ namespace War
             Health += 15;
             Damage += 2;
         }
-        public override void TakeDamage(int damage)
+        public override void TakeDamage(float damage)
         {
             base.TakeDamage(damage);
         }
@@ -244,7 +252,7 @@ namespace War
             Armor += 15;
         }
 
-        public override void TakeDamage(int damage)
+        public override void TakeDamage(float damage)
         {
             base.TakeDamage(damage);
         }
