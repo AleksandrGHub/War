@@ -26,33 +26,48 @@ namespace War
 
         public void Fight()
         {
+            int maxNumberSoldiers;
+            int numberFirstCounrySoldiers;
+            int numberSecondCounrySoldiers;
             Soldier firstSoldier;
             Soldier secondSoldier;
 
             while (_firstCountry.GetCountCells() > 0 & _secondCountry.GetCountCells() > 0)
             {
-                firstSoldier = _firstCountry.GetSoldier();
-                secondSoldier = _secondCountry.GetSoldier();
+                numberFirstCounrySoldiers = _firstCountry.GetCountCells();
+                numberSecondCounrySoldiers = _secondCountry.GetCountCells();
                 Console.Clear();
                 Console.WriteLine("Нажмите любую кнопу для следующего хода.");
                 _firstCountry.ShowInfo();
                 _secondCountry.ShowInfo();
-                firstSoldier.TakeDamage(secondSoldier.Damage);
 
-                if (firstSoldier.Health <= 0)
+                if (numberFirstCounrySoldiers >= numberSecondCounrySoldiers)
                 {
-                    _firstCountry.DeleteSoldier(firstSoldier);
+                    maxNumberSoldiers = numberFirstCounrySoldiers;
                 }
-
-                if (firstSoldier == null) { }
-
                 else
                 {
-                    secondSoldier.TakeDamage(firstSoldier.Damage);
+                    maxNumberSoldiers = numberSecondCounrySoldiers;
+                }
 
-                    if (secondSoldier.Health <= 0)
+                for (int i = 0; i < maxNumberSoldiers; i++)
+                {
+                    firstSoldier = _firstCountry.GetSoldier();
+                    secondSoldier = _secondCountry.GetSoldier();
+                    Attack(firstSoldier, secondSoldier.Damage);
+
+                    if (firstSoldier.Health <= 0)
                     {
-                        _secondCountry.DeleteSoldier(secondSoldier);
+                        _firstCountry.DeleteSoldier(firstSoldier);
+                    }
+                    else
+                    {
+                        Attack(secondSoldier, firstSoldier.Damage);
+
+                        if (secondSoldier.Health <= 0)
+                        {
+                            _secondCountry.DeleteSoldier(secondSoldier);
+                        }
                     }
                 }
 
@@ -66,7 +81,6 @@ namespace War
                 _secondCountry.ShowInfo();
                 Console.WriteLine("Страна " + _secondCountry.Name + " победила!");
             }
-
             else
 
             if (_secondCountry.GetCountCells() == 0)
@@ -76,6 +90,11 @@ namespace War
                 _secondCountry.ShowInfo();
                 Console.WriteLine("Страна " + _firstCountry.Name + " победила!");
             }
+        }
+
+        private void Attack(Soldier soldier, float damage)
+        {
+            soldier.TakeDamage(damage);
         }
     }
 
@@ -187,6 +206,8 @@ namespace War
 
     class Soldier
     {
+        private float _basicArmor = 100;
+
         public Soldier()
         {
             Health = 100;
@@ -200,7 +221,7 @@ namespace War
 
         public virtual void TakeDamage(float damage)
         {
-            Health -= damage * (Armor - (Armor - 100) * 2) / 100;
+            Health -= damage * (Armor - (Armor - _basicArmor) * 2) / _basicArmor;
         }
 
         public virtual void ShowInfo()
@@ -226,6 +247,7 @@ namespace War
             base.ShowInfo();
         }
     }
+
     class AgileSoldier : Soldier
     {
         public AgileSoldier() : base()
