@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 
 namespace War
 {
@@ -54,7 +55,7 @@ namespace War
                 {
                     firstSoldier = _firstCountry.GetSoldier();
                     secondSoldier = _secondCountry.GetSoldier();
-                    Attack(firstSoldier, secondSoldier.Damage);
+                    secondSoldier.Attack(firstSoldier, secondSoldier.Damage);
 
                     if (firstSoldier.Health <= 0)
                     {
@@ -62,7 +63,7 @@ namespace War
                     }
                     else
                     {
-                        Attack(secondSoldier, firstSoldier.Damage);
+                        firstSoldier.Attack(secondSoldier, firstSoldier.Damage);
 
                         if (secondSoldier.Health <= 0)
                         {
@@ -82,7 +83,6 @@ namespace War
                 Console.WriteLine("Страна " + _secondCountry.Name + " победила!");
             }
             else
-
             if (_secondCountry.GetCountCells() == 0)
             {
                 Console.Clear();
@@ -90,11 +90,6 @@ namespace War
                 _secondCountry.ShowInfo();
                 Console.WriteLine("Страна " + _firstCountry.Name + " победила!");
             }
-        }
-
-        private void Attack(Soldier soldier, float damage)
-        {
-            soldier.TakeDamage(damage);
         }
     }
 
@@ -207,6 +202,7 @@ namespace War
     class Soldier
     {
         private float _basicArmor = 100;
+        private int _constant = 2;
 
         public Soldier()
         {
@@ -219,9 +215,14 @@ namespace War
         public float Armor { get; protected set; }
         public float Damage { get; protected set; }
 
+        public virtual void Attack(Soldier soldier, float damage)
+        {
+            soldier.TakeDamage(damage);
+        }
+
         public virtual void TakeDamage(float damage)
         {
-            Health -= damage * (Armor - (Armor - _basicArmor) * 2) / _basicArmor;
+            Health -= damage * (Armor - (Armor - _basicArmor) * _constant) / _basicArmor;
         }
 
         public virtual void ShowInfo()
@@ -235,6 +236,11 @@ namespace War
         public StrongSoldier() : base()
         {
             Damage += 5;
+        }
+
+        public override void Attack(Soldier soldier, float damage)
+        {
+            base.Attack(soldier, damage);
         }
 
         public override void TakeDamage(float damage)
@@ -255,6 +261,12 @@ namespace War
             Health += 15;
             Damage += 2;
         }
+
+        public override void Attack(Soldier soldier, float damage)
+        {
+            base.Attack(soldier, damage);
+        }
+
         public override void TakeDamage(float damage)
         {
             base.TakeDamage(damage);
@@ -272,6 +284,11 @@ namespace War
         {
             Health += 15;
             Armor += 15;
+        }
+
+        public override void Attack(Soldier soldier, float damage)
+        {
+            base.Attack(soldier, damage);
         }
 
         public override void TakeDamage(float damage)
